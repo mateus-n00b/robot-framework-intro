@@ -5,21 +5,18 @@ Documentation     A resource file with reusable keywords and variables.
 ...               domain specific language. They utilize keywords provided
 ...               by the imported SeleniumLibrary.
 Library           SeleniumLibrary
-Library  converter
+Library           MyLibrary.py
 
 *** Variables ***
-${SERVER}         localhost:7272
 ${BROWSER}        Chrome
 ${DELAY}          0.5
-${VALID USER}     demo
-${VALID PASSWORD}    mode
 ${GOOGLE URL}      https://www.google.com/
-${WELCOME URL}    http://${SERVER}/welcome.html
-${ERROR URL}      http://${SERVER}/error.html
 ${INITIAL TEXT}    Amazon Brasil
 ${text}                                            //*[@id="tsf"]/div[2]/div[1]/div[1]/div/div[2]/input
 ${search_button}                                    btnK
 ${product}                  Iphone
+${value}                    1
+${LIMIT PRICE}              2000
 
 *** Keywords ***
 Open Browser To Google Page
@@ -28,11 +25,10 @@ Open Browser To Google Page
     Set Selenium Speed    ${DELAY}
     Google Page Should Be Open
 
-#//*[@id="n/16243890011"]/span/a
 
 Input Query
-    [Arguments]  ${text}  ${INITIAL TEXT}
-    Input Text  ${text}  ${INITIAL TEXT}
+    [Arguments]  ${t1}  ${INITIAL TEXT}
+    Input Text  ${t1}  ${INITIAL TEXT}
 
 Search For Amazon Page
     [Arguments]  ${text}  ${INITIAL TEXT}
@@ -58,5 +54,19 @@ Search For Product On Amazon
     Click Button  //*[@id="nav-search"]/form/div[2]/div/input
 
 Converting To BRL
-    [Arguments]  ${value}=1
-    Convert Value   ${value}
+    [Arguments]  ${value}
+    Log  ${value}
+    Convert Value  ${value}
+
+Is Cheaper
+    ${products}=  Get Source
+    Is Cheap  ${products}  ${LIMIT PRICE}
+
+Validate Product
+#    [Arguments]  ${html}=0
+    ${html}=  Get Source
+    Is Product  ${html}
+
+Must Be Cheaper Than
+    ${products}=  Get Source
+    Cheaper Than  ${products}
