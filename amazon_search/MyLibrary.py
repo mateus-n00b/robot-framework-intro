@@ -30,7 +30,7 @@ class MyLibrary(object):
 
     @keyword
     def is_product(self, html):  # look for the searched products
-        # results are save into .json file
+        # results are saved into .json file
         with open('search_results_output.json', 'w') as outfile:
             data = self.scrape(str(html))
             if data:
@@ -42,7 +42,7 @@ class MyLibrary(object):
 
     @keyword
     def is_cheap(self, html, price_limit_usd):
-        # results are save into .json file
+        # results are saved into .json file
         with open('search_price_output.json', 'w') as outfile:
             data = self.scrape(str(html))
             if data:
@@ -57,6 +57,7 @@ class MyLibrary(object):
                             outfile.write("\n")
         return True
 
+    # Returns the cheapest product
     def cheapest_product(self, html, limit_price_usd=2000):
         data = self.scrape(str(html))
         if data:
@@ -72,13 +73,13 @@ class MyLibrary(object):
 
     @keyword
     def cheaper_than(self, html):
-        # results are save into .json file
+        # results are saved into .json file
         with open('products_cheaper_than.json', 'w') as outfile:
             data = self.scrape(str(html))
             if data:
                 cheapest_price = self.cheapest_product(html)
                 print("Cheapest price is: R$", cheapest_price)
-                for product in data['products']: # iterates over each product
+                for product in data['products']:  # iterates over each product
                     if product['price'] and "Iphone" not in product['title']:
                         price = product['price'].strip("R$").replace('.', '').replace(',', '.')
                         print("Price in BRL: ", price)

@@ -4,8 +4,8 @@ Documentation  A simple test suit case
 
 Suite Setup       Open Browser To Google Page
 Suite Teardown    Close Browser
-#Test Setup        Search For Amazon Page  ${text}     ${INITIAL TEXT}
-#Test Template     Search In Amazon
+#Test Setup
+#Test Template
 Resource          resource.robot
 
 *** Test Cases ***
@@ -25,8 +25,3 @@ The Higher Price In The First Page Can't Be Greater Than U$2000
 
 Products Different Than The Searched Product Should Be Cheaper Than The Searched Product
     Must Be Cheaper Than
-
-#Search Product
-#    Search For Product On Amazon  ${product}
-#    Converting To BRL  3455
-#
