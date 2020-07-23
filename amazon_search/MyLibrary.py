@@ -1,3 +1,4 @@
+# Library created to provide the required functions to our tests
 import requests as rq
 import datetime
 import json
@@ -13,13 +14,14 @@ class MyLibrary(object):
         pass
 
     @keyword
-    def convert_value(self, value):  # Function to convert BRL to USD
+    def convert_value(self, value, to_usd=True):  # Function to convert BRL to USD and vice-versa
         value = float(value)
+        # API call
         url = "https://api.exchangeratesapi.io/latest?base=USD"
         response = rq.get(url)
         json_obj = json.loads(response.text)
         brl = float(json_obj['rates']['BRL'])
-        total = "%.2f" % (value/brl)
+        total = "%.2f" % (value/brl) if to_usd else "%.2f" % (value*brl)
         return float(total)
 
     def scrape(self, html):
@@ -27,7 +29,8 @@ class MyLibrary(object):
         return e.extract(html)
 
     @keyword
-    def is_product(self, html):
+    def is_product(self, html):  # look for the searched products
+        # results are save into .json file
         with open('search_results_output.json', 'w') as outfile:
             data = self.scrape(str(html))
             if data:
@@ -39,6 +42,7 @@ class MyLibrary(object):
 
     @keyword
     def is_cheap(self, html, price_limit_usd):
+        # results are save into .json file
         with open('search_price_output.json', 'w') as outfile:
             data = self.scrape(str(html))
             if data:
@@ -53,10 +57,11 @@ class MyLibrary(object):
                             outfile.write("\n")
         return True
 
-    def cheapest_product(self, html):
+    def cheapest_product(self, html, limit_price_usd=2000):
         data = self.scrape(str(html))
         if data:
-            cheapest_product_price = 99999
+            cheapest_product_price = self.convert_value(limit_price_usd, to_usd=False)  # Get in BRL
+
             for product in data['products']:
                 if product['price'] and "Apple" in product['title']:
                     price = product['price'].strip("R$").replace('.', '').replace(',', '.')
@@ -67,17 +72,18 @@ class MyLibrary(object):
 
     @keyword
     def cheaper_than(self, html):
+        # results are save into .json file
         with open('products_cheaper_than.json', 'w') as outfile:
             data = self.scrape(str(html))
             if data:
                 cheapest_price = self.cheapest_product(html)
                 print("Cheapest price is: R$", cheapest_price)
-                for product in data['products']:
+                for product in data['products']: # iterates over each product
                     if product['price'] and "Iphone" not in product['title']:
                         price = product['price'].strip("R$").replace('.', '').replace(',', '.')
                         print("Price in BRL: ", price)
                         price = float(price)
-                        if price < cheapest_price:
+                        if price < cheapest_price: # It's cheaper than...?
                             json.dump(product, outfile)
                             outfile.write("\n")
         return True

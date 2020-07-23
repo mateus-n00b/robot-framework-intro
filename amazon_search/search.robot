@@ -16,6 +16,7 @@ Open Amazon Page
     Search For Product On Amazon  ${product}
     Log  Total of found products
     Get Text  //*[@id="search"]/span/div/span/h1/div/div[1]/div/div/span[1]
+#    Get Text  //*[@id="search"]/div[1]/div/div[1]/div/span[3]/div[2]/div[25]/span/div/div/ul/li[6]
     Validate Product
 
 The Higher Price In The First Page Can't Be Greater Than U$2000
