@@ -13,3 +13,4 @@ output.xml
 *.log
 venv/*
 *.png
+*.json
